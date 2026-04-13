@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Placeholder splash logo — replace with your branded vector -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:fillColor="#6C63FF"
+        android:pathData="M54,20 L80,45 L70,45 L70,85 L38,85 L38,45 L28,45 Z" />
+    <path
+        android:fillColor="#00D4AA"
+        android:pathData="M40,60 L68,60 L68,65 L40,65 Z" />
+    <path
+        android:fillColor="#00D4AA"
+        android:pathData="M40,70 L60,70 L60,75 L40,75 Z" />
+</vector>

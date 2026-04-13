@@ -1,0 +1,94 @@
+{
+  "id": "business-profile",
+  "name": "Business Profile",
+  "description": "A professional business showcase app with services, team, and contact info.",
+  "category": "BUSINESS",
+  "isPremium": false,
+  "tags": ["professional", "services", "contact", "team", "portfolio"],
+  "defaultConfig": {
+    "appName": "My Business",
+    "packageName": "com.mybusiness.app",
+    "primaryColor": "#1A237E",
+    "accentColor": "#FFC107",
+    "backgroundColor": "#FFFFFF",
+    "logoUrl": "",
+    "versionName": "1.0.0",
+    "versionCode": 1,
+    "minSdkVersion": 26,
+    "targetSdkVersion": 34
+  },
+  "defaultSections": [
+    {
+      "id": "hero-001",
+      "type": "HERO",
+      "title": "Welcome to My Business",
+      "subtitle": "Professional services you can trust",
+      "content": "",
+      "imageUrl": "",
+      "ctaText": "Get a Free Quote",
+      "ctaAction": "scroll:contact",
+      "isVisible": true,
+      "order": 0
+    },
+    {
+      "id": "features-001",
+      "type": "FEATURES",
+      "title": "What We Offer",
+      "subtitle": "Our core services",
+      "content": "Service 1|Service 2|Service 3|Service 4|Service 5|Service 6",
+      "imageUrl": "",
+      "ctaText": "",
+      "ctaAction": "",
+      "isVisible": true,
+      "order": 1
+    },
+    {
+      "id": "gallery-001",
+      "type": "GALLERY",
+      "title": "Our Work",
+      "subtitle": "A selection of recent projects",
+      "content": "",
+      "imageUrl": "",
+      "ctaText": "View All",
+      "ctaAction": "",
+      "isVisible": true,
+      "order": 2
+    },
+    {
+      "id": "testimonials-001",
+      "type": "TESTIMONIALS",
+      "title": "What Our Clients Say",
+      "subtitle": "",
+      "content": "\"Excellent service and results\" - John D.|\"Highly recommend, very professional\" - Sarah M.|\"Best decision we made\" - Tech Corp",
+      "imageUrl": "",
+      "ctaText": "",
+      "ctaAction": "",
+      "isVisible": true,
+      "order": 3
+    },
+    {
+      "id": "contact-001",
+      "type": "CONTACT",
+      "title": "Get In Touch",
+      "subtitle": "We'd love to hear from you",
+      "content": "contact@mybusiness.com|+1 (555) 000-0000|123 Business St, City, State",
+      "imageUrl": "",
+      "ctaText": "Send Message",
+      "ctaAction": "mailto:contact@mybusiness.com",
+      "isVisible": true,
+      "order": 4
+    },
+    {
+      "id": "footer-001",
+      "type": "FOOTER",
+      "title": "",
+      "subtitle": "",
+      "content": "© 2025 My Business. All rights reserved.",
+      "imageUrl": "",
+      "ctaText": "",
+      "ctaAction": "",
+      "isVisible": true,
+      "order": 5
+    }
+  ]
+}

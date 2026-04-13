@@ -1,0 +1,94 @@
+{
+  "id": "blog",
+  "name": "Blog & Content",
+  "description": "A content-first app for writers, publishers, and media brands.",
+  "category": "BLOG",
+  "isPremium": false,
+  "tags": ["blog", "articles", "media", "content", "publishing"],
+  "defaultConfig": {
+    "appName": "My Blog",
+    "packageName": "com.myblog.app",
+    "primaryColor": "#37474F",
+    "accentColor": "#00BCD4",
+    "backgroundColor": "#FFFFFF",
+    "logoUrl": "",
+    "versionName": "1.0.0",
+    "versionCode": 1,
+    "minSdkVersion": 26,
+    "targetSdkVersion": 34
+  },
+  "defaultSections": [
+    {
+      "id": "hero-blog-001",
+      "type": "HERO",
+      "title": "Stories Worth Reading",
+      "subtitle": "Insights, ideas, and inspiration delivered daily",
+      "content": "",
+      "imageUrl": "",
+      "ctaText": "Start Reading",
+      "ctaAction": "scroll:blog",
+      "isVisible": true,
+      "order": 0
+    },
+    {
+      "id": "blog-001",
+      "type": "BLOG",
+      "title": "Latest Articles",
+      "subtitle": "Fresh content every week",
+      "content": "The Future of Technology|5 min read|Understanding AI in 2025|8 min read|Design Trends to Watch|4 min read|Building Better Products|6 min read",
+      "imageUrl": "",
+      "ctaText": "Read More",
+      "ctaAction": "",
+      "isVisible": true,
+      "order": 1
+    },
+    {
+      "id": "features-blog-001",
+      "type": "FEATURES",
+      "title": "Why Subscribe",
+      "subtitle": "",
+      "content": "Weekly curated content|Expert contributors|No ads, ever|Offline reading|Dark mode support|Newsletter included",
+      "imageUrl": "",
+      "ctaText": "",
+      "ctaAction": "",
+      "isVisible": true,
+      "order": 2
+    },
+    {
+      "id": "gallery-blog-001",
+      "type": "GALLERY",
+      "title": "Featured Stories",
+      "subtitle": "Our most popular reads",
+      "content": "",
+      "imageUrl": "",
+      "ctaText": "Explore",
+      "ctaAction": "",
+      "isVisible": true,
+      "order": 3
+    },
+    {
+      "id": "form-blog-001",
+      "type": "FORM",
+      "title": "Subscribe to Newsletter",
+      "subtitle": "Get the best articles in your inbox",
+      "content": "email|name",
+      "imageUrl": "",
+      "ctaText": "Subscribe Free",
+      "ctaAction": "",
+      "isVisible": true,
+      "order": 4
+    },
+    {
+      "id": "footer-blog-001",
+      "type": "FOOTER",
+      "title": "",
+      "subtitle": "",
+      "content": "© 2025 My Blog. Written with ❤️",
+      "imageUrl": "",
+      "ctaText": "",
+      "ctaAction": "",
+      "isVisible": true,
+      "order": 5
+    }
+  ]
+}

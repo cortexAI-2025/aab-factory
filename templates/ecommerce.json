@@ -1,0 +1,106 @@
+{
+  "id": "ecommerce",
+  "name": "E-commerce",
+  "description": "A product catalog app with categories, cart functionality, and checkout flow.",
+  "category": "ECOMMERCE",
+  "isPremium": true,
+  "tags": ["shop", "products", "cart", "catalog", "checkout"],
+  "defaultConfig": {
+    "appName": "My Shop",
+    "packageName": "com.myshop.app",
+    "primaryColor": "#E53935",
+    "accentColor": "#FF8F00",
+    "backgroundColor": "#FAFAFA",
+    "logoUrl": "",
+    "versionName": "1.0.0",
+    "versionCode": 1,
+    "minSdkVersion": 26,
+    "targetSdkVersion": 34
+  },
+  "defaultSections": [
+    {
+      "id": "hero-ecom-001",
+      "type": "HERO",
+      "title": "Summer Sale 🔥",
+      "subtitle": "Up to 50% off on selected items",
+      "content": "",
+      "imageUrl": "",
+      "ctaText": "Shop Now",
+      "ctaAction": "scroll:products",
+      "isVisible": true,
+      "order": 0
+    },
+    {
+      "id": "features-ecom-001",
+      "type": "FEATURES",
+      "title": "Why Shop With Us",
+      "subtitle": "",
+      "content": "Free shipping over $50|30-day returns|Secure checkout|24/7 support|Loyalty rewards|Exclusive deals",
+      "imageUrl": "",
+      "ctaText": "",
+      "ctaAction": "",
+      "isVisible": true,
+      "order": 1
+    },
+    {
+      "id": "products-001",
+      "type": "PRODUCTS",
+      "title": "Featured Products",
+      "subtitle": "Handpicked just for you",
+      "content": "Product 1|$29.99|Product 2|$49.99|Product 3|$19.99|Product 4|$89.99",
+      "imageUrl": "",
+      "ctaText": "Add to Cart",
+      "ctaAction": "",
+      "isVisible": true,
+      "order": 2
+    },
+    {
+      "id": "gallery-ecom-001",
+      "type": "GALLERY",
+      "title": "New Arrivals",
+      "subtitle": "Fresh styles every week",
+      "content": "",
+      "imageUrl": "",
+      "ctaText": "See All",
+      "ctaAction": "",
+      "isVisible": true,
+      "order": 3
+    },
+    {
+      "id": "testimonials-ecom-001",
+      "type": "TESTIMONIALS",
+      "title": "Customer Reviews",
+      "subtitle": "⭐⭐⭐⭐⭐ 4.9/5 from 2,847 reviews",
+      "content": "\"Fast delivery and great quality!\" - Emily R.|\"My go-to shop for everything\" - Marcus T.|\"Amazing products, will order again\" - Lisa K.",
+      "imageUrl": "",
+      "ctaText": "",
+      "ctaAction": "",
+      "isVisible": true,
+      "order": 4
+    },
+    {
+      "id": "contact-ecom-001",
+      "type": "CONTACT",
+      "title": "Customer Support",
+      "subtitle": "We're here to help",
+      "content": "support@myshop.com|+1 (555) 100-2000",
+      "imageUrl": "",
+      "ctaText": "Chat Now",
+      "ctaAction": "",
+      "isVisible": true,
+      "order": 5
+    },
+    {
+      "id": "footer-ecom-001",
+      "type": "FOOTER",
+      "title": "",
+      "subtitle": "",
+      "content": "© 2025 My Shop. Secure payments via Stripe.",
+      "imageUrl": "",
+      "ctaText": "",
+      "ctaAction": "",
+      "isVisible": true,
+      "order": 6
+    }
+  ]
+}

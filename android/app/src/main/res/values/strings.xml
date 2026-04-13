@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AAB Factory</string>
+    <string name="app_tagline">Build Android apps with AI</string>
+
+    <!-- Auth -->
+    <string name="sign_in">Sign In</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="continue_with_google">Continue with Google</string>
+    <string name="forgot_password">Forgot Password?</string>
+
+    <!-- Home -->
+    <string name="my_projects">My Projects</string>
+    <string name="new_project">New Project</string>
+    <string name="no_projects">No projects yet. Start building!</string>
+
+    <!-- Onboarding -->
+    <string name="choose_creation_method">How do you want to build?</string>
+    <string name="use_ai_prompt">Use AI Prompt</string>
+    <string name="use_template">Use Template</string>
+    <string name="ai_prompt_hint">Describe your app (e.g. "A real estate app with filtering and WhatsApp contact")</string>
+    <string name="generate_with_ai">Generate with AI</string>
+
+    <!-- Editor -->
+    <string name="visual_editor">Visual Editor</string>
+    <string name="app_name_label">App Name</string>
+    <string name="primary_color">Primary Color</string>
+    <string name="accent_color">Accent Color</string>
+    <string name="upload_logo">Upload Logo</string>
+    <string name="sections">Sections</string>
+    <string name="add_section">Add Section</string>
+
+    <!-- Preview -->
+    <string name="preview">Preview</string>
+    <string name="live_preview">Live Preview</string>
+
+    <!-- Build -->
+    <string name="generate_aab">Generate AAB</string>
+    <string name="building">Building…</string>
+    <string name="build_complete">Build Complete!</string>
+    <string name="download_aab">Download AAB</string>
+    <string name="build_queued">Your build is queued. We\'ll notify you when it\'s ready.</string>
+
+    <!-- Subscription -->
+    <string name="upgrade_to_pro">Upgrade to Pro</string>
+    <string name="free_plan">Free Plan</string>
+    <string name="pro_plan">Pro Plan</string>
+    <string name="per_month">/ month</string>
+    <string name="current_plan">Current Plan</string>
+    <string name="subscribe_now">Subscribe Now</string>
+    <string name="manage_subscription">Manage Subscription</string>
+
+    <!-- Errors -->
+    <string name="error_generic">Something went wrong. Please try again.</string>
+    <string name="error_network">No internet connection.</string>
+    <string name="error_auth">Authentication failed. Please sign in again.</string>
+    <string name="error_build_limit">Build limit reached. Upgrade to Pro for unlimited builds.</string>
+</resources>

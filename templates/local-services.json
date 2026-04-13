@@ -1,0 +1,118 @@
+{
+  "id": "local-services",
+  "name": "Local Services",
+  "description": "A location-based app for local service providers — plumbers, cleaners, contractors, and more.",
+  "category": "LOCAL_SERVICES",
+  "isPremium": true,
+  "tags": ["local", "booking", "map", "services", "appointment", "location"],
+  "defaultConfig": {
+    "appName": "Local Pro",
+    "packageName": "com.localpro.app",
+    "primaryColor": "#1B5E20",
+    "accentColor": "#FF6F00",
+    "backgroundColor": "#F9FBE7",
+    "logoUrl": "",
+    "versionName": "1.0.0",
+    "versionCode": 1,
+    "minSdkVersion": 26,
+    "targetSdkVersion": 34
+  },
+  "defaultSections": [
+    {
+      "id": "hero-local-001",
+      "type": "HERO",
+      "title": "Your Local Experts",
+      "subtitle": "Fast, reliable, and trusted by your neighbors",
+      "content": "",
+      "imageUrl": "",
+      "ctaText": "Book Now",
+      "ctaAction": "scroll:form",
+      "isVisible": true,
+      "order": 0
+    },
+    {
+      "id": "features-local-001",
+      "type": "FEATURES",
+      "title": "Our Services",
+      "subtitle": "Everything you need, handled professionally",
+      "content": "Plumbing & Repairs|Electrical Work|House Cleaning|Garden & Landscaping|Painting & Decorating|Moving Services",
+      "imageUrl": "",
+      "ctaText": "",
+      "ctaAction": "",
+      "isVisible": true,
+      "order": 1
+    },
+    {
+      "id": "map-001",
+      "type": "MAP",
+      "title": "We Cover Your Area",
+      "subtitle": "Serving customers within 30 miles",
+      "content": "latitude:40.7128|longitude:-74.0060|radius:30",
+      "imageUrl": "",
+      "ctaText": "Check Availability",
+      "ctaAction": "",
+      "isVisible": true,
+      "order": 2
+    },
+    {
+      "id": "gallery-local-001",
+      "type": "GALLERY",
+      "title": "Recent Projects",
+      "subtitle": "See the quality of our work",
+      "content": "",
+      "imageUrl": "",
+      "ctaText": "View Portfolio",
+      "ctaAction": "",
+      "isVisible": true,
+      "order": 3
+    },
+    {
+      "id": "testimonials-local-001",
+      "type": "TESTIMONIALS",
+      "title": "What Neighbors Say",
+      "subtitle": "⭐⭐⭐⭐⭐ Rated 5 stars on Google",
+      "content": "\"Fixed our leaking pipe same day. Excellent!\" - Jane W., Brooklyn|\"Transformed our garden. Very professional\" - Bob M., Queens|\"Clean, fast, and fair pricing\" - Anna L., Manhattan",
+      "imageUrl": "",
+      "ctaText": "",
+      "ctaAction": "",
+      "isVisible": true,
+      "order": 4
+    },
+    {
+      "id": "form-local-001",
+      "type": "FORM",
+      "title": "Book an Appointment",
+      "subtitle": "Same-day availability in most areas",
+      "content": "name|phone|service|date|address|message",
+      "imageUrl": "",
+      "ctaText": "Confirm Booking",
+      "ctaAction": "",
+      "isVisible": true,
+      "order": 5
+    },
+    {
+      "id": "contact-local-001",
+      "type": "CONTACT",
+      "title": "Emergency? Call Us Now",
+      "subtitle": "24/7 emergency service available",
+      "content": "info@localpro.com|+1 (555) 911-HELP|Open: Mon–Sun 7am–10pm",
+      "imageUrl": "",
+      "ctaText": "Call Now",
+      "ctaAction": "tel:+15559114357",
+      "isVisible": true,
+      "order": 6
+    },
+    {
+      "id": "footer-local-001",
+      "type": "FOOTER",
+      "title": "",
+      "subtitle": "",
+      "content": "© 2025 Local Pro Services. Licensed & Insured.",
+      "imageUrl": "",
+      "ctaText": "",
+      "ctaAction": "",
+      "isVisible": true,
+      "order": 7
+    }
+  ]
+}

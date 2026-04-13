@@ -1,0 +1,50 @@
+# Root
+.DS_Store
+*.log
+*.tmp
+.env
+.env.local
+.env.production
+
+# Android
+android/.gradle/
+android/local.properties
+android/app/build/
+android/build/
+android/captures/
+android/.externalNativeBuild/
+android/.cxx/
+android/app/google-services.json
+*.apk
+*.aab
+*.jks
+*.keystore
+!android/gradle/wrapper/gradle-wrapper.jar
+
+# Node.js Backend
+backend/node_modules/
+backend/dist/
+backend/.env
+backend/coverage/
+backend/*.js.map
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.swp
+*.swo
+
+# Gradle
+gradle-wrapper.jar
+.gradle/
+
+# Firebase
+firebase-debug.log
+.firebase/
+
+# Keystore (security)
+keystore/
+*.p12
+*.pfx
+serviceAccountKey.json

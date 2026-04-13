@@ -1,0 +1,94 @@
+{
+  "id": "lead-generation",
+  "name": "Lead Generation",
+  "description": "A conversion-optimized app to capture and nurture leads with smart CTAs.",
+  "category": "LEAD_GEN",
+  "isPremium": true,
+  "tags": ["leads", "forms", "cta", "conversion", "funnel", "sales"],
+  "defaultConfig": {
+    "appName": "Get Started",
+    "packageName": "com.myleads.app",
+    "primaryColor": "#6A1B9A",
+    "accentColor": "#FFCA28",
+    "backgroundColor": "#FAFAFA",
+    "logoUrl": "",
+    "versionName": "1.0.0",
+    "versionCode": 1,
+    "minSdkVersion": 26,
+    "targetSdkVersion": 34
+  },
+  "defaultSections": [
+    {
+      "id": "hero-lead-001",
+      "type": "HERO",
+      "title": "Transform Your Business Today",
+      "subtitle": "Join 10,000+ businesses that scaled with our proven solution",
+      "content": "",
+      "imageUrl": "",
+      "ctaText": "Get Free Consultation",
+      "ctaAction": "scroll:form",
+      "isVisible": true,
+      "order": 0
+    },
+    {
+      "id": "features-lead-001",
+      "type": "FEATURES",
+      "title": "The Results Speak for Themselves",
+      "subtitle": "",
+      "content": "3x more leads in 30 days|50% lower cost per acquisition|Real-time analytics dashboard|Automated follow-up sequences|CRM integration|Dedicated account manager",
+      "imageUrl": "",
+      "ctaText": "",
+      "ctaAction": "",
+      "isVisible": true,
+      "order": 1
+    },
+    {
+      "id": "testimonials-lead-001",
+      "type": "TESTIMONIALS",
+      "title": "Success Stories",
+      "subtitle": "Real results from real businesses",
+      "content": "\"Generated $120K in new revenue in 60 days\" - CEO, TechStartup|\"Tripled our conversion rate\" - Marketing Dir, RetailCo|\"Best ROI of any tool we've used\" - Founder, AgencyX",
+      "imageUrl": "",
+      "ctaText": "",
+      "ctaAction": "",
+      "isVisible": true,
+      "order": 2
+    },
+    {
+      "id": "form-lead-001",
+      "type": "FORM",
+      "title": "Book Your Free Strategy Session",
+      "subtitle": "Limited spots available — claim yours now",
+      "content": "name|email|phone|company|message",
+      "imageUrl": "",
+      "ctaText": "Claim My Free Session",
+      "ctaAction": "",
+      "isVisible": true,
+      "order": 3
+    },
+    {
+      "id": "features-lead-002",
+      "type": "FEATURES",
+      "title": "Risk-Free Guarantee",
+      "subtitle": "",
+      "content": "30-day money-back guarantee|No contracts or commitments|Cancel anytime|White-glove onboarding|Priority support|Free setup assistance",
+      "imageUrl": "",
+      "ctaText": "",
+      "ctaAction": "",
+      "isVisible": true,
+      "order": 4
+    },
+    {
+      "id": "footer-lead-001",
+      "type": "FOOTER",
+      "title": "",
+      "subtitle": "",
+      "content": "© 2025 My Company. Privacy Policy | Terms of Service",
+      "imageUrl": "",
+      "ctaText": "",
+      "ctaAction": "",
+      "isVisible": true,
+      "order": 5
+    }
+  ]
+}

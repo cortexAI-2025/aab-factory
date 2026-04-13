@@ -1,4 +1,5 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
+import admin from 'firebase-admin';
 import { getFirestore } from '../config/firebase';
 
 const FREE_BUILDS_PER_MONTH = 2;
@@ -62,14 +63,12 @@ export async function requireProForTemplate(
 
 /**
  * Increments the monthly build counter for a user.
+ * Called by buildService after successfully queuing a build.
  */
 export async function incrementBuildCounter(uid: string): Promise<void> {
   const db = getFirestore();
-  await db.collection('users').doc(uid).set(
-    { buildsUsedThisMonth: db.collection('_').doc().id ? 0 : 0 }, // type trick
-    { merge: true }
-  );
   await db.collection('users').doc(uid).update({
-    buildsUsedThisMonth: require('firebase-admin').firestore.FieldValue.increment(1),
+    buildsUsedThisMonth: admin.firestore.FieldValue.increment(1),
+    updatedAt: new Date().toISOString(),
   });
 }

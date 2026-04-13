@@ -4,7 +4,6 @@ import {
   createCheckoutSession,
   handleWebhookEvent,
   getCustomerSubscription,
-  createStripeCustomer,
 } from '../services/stripeService';
 import { z } from 'zod';
 
@@ -66,27 +65,34 @@ export async function stripeRoutes(fastify: FastifyInstance): Promise<void> {
   /**
    * POST /stripe/webhook
    * Receives Stripe webhook events (signature verified).
-   * This MUST use the raw body — do NOT use JSON parser for this route.
+   *
+   * Registered inside its own nested plugin so that the raw-body content-type
+   * parser is scoped ONLY to this route and does NOT affect the JSON-parsed
+   * routes above (/create-checkout-session, /subscription-status).
    */
-  fastify.addContentTypeParser(
-    'application/json',
-    { parseAs: 'buffer', bodyLimit: 1_048_576 },
-    (_req, body, done) => done(null, body)
-  );
+  fastify.register(async (webhookScope: FastifyInstance) => {
+    // Override JSON parsing for this scope only: deliver raw Buffer to the handler
+    // so Stripe can verify the HMAC signature against the original bytes.
+    webhookScope.addContentTypeParser(
+      'application/json',
+      { parseAs: 'buffer', bodyLimit: 1_048_576 },
+      (_req, body, done) => done(null, body),
+    );
 
-  fastify.post('/webhook', async (request: FastifyRequest, reply) => {
-    const signature = request.headers['stripe-signature'];
-    if (!signature || typeof signature !== 'string') {
-      return reply.status(400).send({ error: 'Missing Stripe-Signature header' });
-    }
+    webhookScope.post('/webhook', async (request: FastifyRequest, reply) => {
+      const signature = request.headers['stripe-signature'];
+      if (!signature || typeof signature !== 'string') {
+        return reply.status(400).send({ error: 'Missing Stripe-Signature header' });
+      }
 
-    try {
-      await handleWebhookEvent(request.body as Buffer, signature);
-      return reply.status(200).send({ received: true });
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Webhook processing failed';
-      fastify.log.error(err, 'Stripe webhook error');
-      return reply.status(400).send({ error: 'WebhookError', message });
-    }
+      try {
+        await handleWebhookEvent(request.body as Buffer, signature);
+        return reply.status(200).send({ received: true });
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : 'Webhook processing failed';
+        webhookScope.log.error(err, 'Stripe webhook error');
+        return reply.status(400).send({ error: 'WebhookError', message });
+      }
+    });
   });
 }

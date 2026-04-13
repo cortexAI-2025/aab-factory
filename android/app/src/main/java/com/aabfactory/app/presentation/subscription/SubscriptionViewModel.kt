@@ -1,7 +1,5 @@
 package com.aabfactory.app.presentation.subscription
 
-import android.content.Intent
-import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aabfactory.app.data.model.Plan

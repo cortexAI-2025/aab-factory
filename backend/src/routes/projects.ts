@@ -2,7 +2,6 @@ import { FastifyInstance } from 'fastify';
 import { verifyFirebaseToken } from '../middleware/auth';
 import { getFirestore } from '../config/firebase';
 import { z } from 'zod';
-import { v4 as uuidv4 } from 'uuid';
 
 const AppConfigSchema = z.object({
   appName: z.string().min(1).max(60),

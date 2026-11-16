@@ -1,6 +1,5 @@
 import admin from 'firebase-admin';
 
-let firebaseApp: admin.app.App;
 
 export function initializeFirebase(): void {
   if (admin.apps.length > 0) return;
@@ -13,7 +12,7 @@ export function initializeFirebase(): void {
         clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
       });
 
-  firebaseApp = admin.initializeApp({
+  admin.initializeApp({
     credential,
     storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
   });

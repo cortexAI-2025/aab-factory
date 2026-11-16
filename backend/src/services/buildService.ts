@@ -1,12 +1,11 @@
-import { execFile } from 'child_process';
-import { promisify } from 'util';
 import path from 'path';
 import fs from 'fs/promises';
 import { v4 as uuidv4 } from 'uuid';
 import { getFirestore, getStorage } from '../config/firebase';
 import admin from 'firebase-admin';
 
-const execFileAsync = promisify(execFile);
+import { assertSigningConfiguration, buildInSandbox, signAndVerifyAab } from './build-security';
+let activeBuilds = 0;
 
 interface BuildParams {
   projectId: string;
@@ -22,6 +21,7 @@ interface BuildRecord {
   userId: string;
   status: 'QUEUED' | 'BUILDING' | 'SUCCESS' | 'FAILED';
   downloadUrl: string | null;
+  sha256?: string;
   errorMessage: string | null;
   createdAt: string;
   completedAt: string | null;
@@ -40,50 +40,56 @@ export async function queueBuild(params: BuildParams): Promise<{
   estimatedMinutes: number;
   queuePosition: number;
 }> {
-  const db = getFirestore();
-  const buildId = uuidv4();
-  const now = new Date().toISOString();
+  // Reject unsupported key imports and implicit system signing before charging quota.
+  assertSigningConfiguration(params.keystoreType);
+  if (activeBuilds >= 1) throw new Error('Build capacity reached; retry after the current build');
+  activeBuilds++;
+  try {
+    const db = getFirestore();
+    const buildId = uuidv4();
+    const now = new Date().toISOString();
 
-  // Count pending/building jobs to estimate queue position
-  const pending = await db.collection('builds')
-    .where('status', 'in', ['QUEUED', 'BUILDING'])
-    .count()
-    .get();
-  const queuePosition = (pending.data().count ?? 0) + 1;
-  const estimatedMinutes = Math.ceil(queuePosition * 2.5); // ~2.5 min per build
+    // Count pending/building jobs to estimate queue position
+    const pending = await db.collection('builds')
+      .where('status', 'in', ['QUEUED', 'BUILDING'])
+      .count()
+      .get();
+    const queuePosition = (pending.data().count ?? 0) + 1;
+    const estimatedMinutes = Math.ceil(queuePosition * 2.5); // ~2.5 min per build
 
-  const buildRecord: BuildRecord = {
-    buildId,
-    projectId: params.projectId,
-    userId: params.userId,
-    status: 'QUEUED',
-    downloadUrl: null,
-    errorMessage: null,
-    createdAt: now,
-    completedAt: null,
-    estimatedMinutes,
-    queuePosition,
-  };
+    const buildRecord: BuildRecord = {
+      buildId,
+      projectId: params.projectId,
+      userId: params.userId,
+      status: 'QUEUED',
+      downloadUrl: null,
+      errorMessage: null,
+      createdAt: now,
+      completedAt: null,
+      estimatedMinutes,
+      queuePosition,
+    };
 
-  await db.collection('builds').doc(buildId).set(buildRecord);
+    await db.collection('builds').doc(buildId).set(buildRecord);
 
-  // Update project build status
-  await db.collection('users').doc(params.userId)
-    .collection('projects').doc(params.projectId)
-    .update({ buildStatus: 'QUEUED', updatedAt: now });
+    // Update project build status
+    await db.collection('users').doc(params.userId)
+      .collection('projects').doc(params.projectId)
+      .update({ buildStatus: 'QUEUED', updatedAt: now });
 
-  // Increment build counter for free plan tracking
-  await db.collection('users').doc(params.userId).update({
-    buildsUsedThisMonth: admin.firestore.FieldValue.increment(1),
-    updatedAt: now,
-  });
+    // Increment build counter for free plan tracking
+    await db.collection('users').doc(params.userId).update({
+      buildsUsedThisMonth: admin.firestore.FieldValue.increment(1),
+      updatedAt: now,
+    });
 
-  // Execute build asynchronously (non-blocking)
-  executeBuildAsync(buildId, params).catch(err => {
-    console.error(`Build ${buildId} failed:`, err);
-  });
+    // Execute build asynchronously (non-blocking)
+    executeBuildAsync(buildId, params).catch(err => {
+      console.error(`Build ${buildId} failed: ${err instanceof Error ? err.name : "BuildError"}`);
+    }).finally(() => { activeBuilds--; });
 
-  return { buildId, status: 'QUEUED', estimatedMinutes, queuePosition };
+    return { buildId, status: 'QUEUED', estimatedMinutes, queuePosition };
+  } catch (error) { activeBuilds--; throw error; }
 }
 
 /**
@@ -96,8 +102,11 @@ async function executeBuildAsync(buildId: string, params: BuildParams): Promise<
   const projectRef = db.collection('users').doc(params.userId)
     .collection('projects').doc(params.projectId);
 
-  const workDir = path.join('/tmp', 'aab-builds', buildId);
+  const baseDir = process.env.AAB_WORKSPACE_DIR || '/tmp/aab-builds';
+  await fs.mkdir(baseDir, { recursive: true, mode: 0o700 });
+  const workDir = await fs.mkdtemp(path.join(baseDir, buildId + '-'));
 
+  let signingDir: string | undefined;
   try {
     // Mark as building
     await buildRef.update({ status: 'BUILDING', updatedAt: new Date().toISOString() });
@@ -109,36 +118,28 @@ async function executeBuildAsync(buildId: string, params: BuildParams): Promise<
     // Generate Android project from template
     await generateAndroidProject(workDir, params.projectData);
 
-    // Run Gradle bundleRelease
-    const keystorePath = process.env.KEYSTORE_PATH!;
-    const keystorePass = process.env.KEYSTORE_PASSWORD!;
-    const keyAlias = process.env.KEY_ALIAS!;
-    const keyPass = process.env.KEY_PASSWORD!;
-
-    await execFileAsync('./gradlew', [
-      'bundleRelease',
-      `-Pandroid.injected.signing.store.file=${keystorePath}`,
-      `-Pandroid.injected.signing.store.password=${keystorePass}`,
-      `-Pandroid.injected.signing.key.alias=${keyAlias}`,
-      `-Pandroid.injected.signing.key.password=${keyPass}`,
-      '--no-daemon',
-    ], {
-      cwd: workDir,
-      timeout: 8 * 60 * 1000, // 8 minutes max
-      env: {
-        ...process.env,
-        ANDROID_HOME: process.env.ANDROID_HOME,
-        JAVA_HOME: process.env.JAVA_HOME,
-      },
-    });
+    // No signing, Firebase, Stripe or AI credentials enter the build container.
+    await buildInSandbox(workDir, buildId);
 
     // Upload AAB to Firebase Storage
     const aabPath = path.join(workDir, 'app/build/outputs/bundle/release/app-release.aab');
-    const downloadUrl = await uploadAabToStorage(aabPath, params.userId, params.projectId, buildId);
+    // Seal the untrusted output after container destruction. Never sign a path
+    // whose parent was replaced by a symlink inside the imported workspace.
+    const resolved = await fs.realpath(aabPath);
+    const workspace = await fs.realpath(workDir);
+    if (!resolved.startsWith(workspace + path.sep) || (await fs.lstat(aabPath)).isSymbolicLink()) {
+      throw new Error('AAB escapes the isolated workspace');
+    }
+    signingDir = await fs.mkdtemp(path.join('/tmp', 'aab-signing-'));
+    const sealedAab = path.join(signingDir, 'app-release.aab');
+    await fs.copyFile(resolved, sealedAab);
+    await fs.chmod(sealedAab, 0o600);
+    const sha256 = await signAndVerifyAab(sealedAab);
+    const downloadUrl = await uploadAabToStorage(sealedAab, params.userId, params.projectId, buildId);
 
     // Mark success
     const completedAt = new Date().toISOString();
-    await buildRef.update({ status: 'SUCCESS', downloadUrl, completedAt });
+    await buildRef.update({ status: 'SUCCESS', downloadUrl, sha256, completedAt });
     await projectRef.update({ buildStatus: 'SUCCESS', lastBuildUrl: downloadUrl });
 
   } catch (err) {
@@ -147,6 +148,7 @@ async function executeBuildAsync(buildId: string, params: BuildParams): Promise<
     await buildRef.update({ status: 'FAILED', errorMessage, completedAt });
     await projectRef.update({ buildStatus: 'FAILED' });
   } finally {
+    if (signingDir) await fs.rm(signingDir, {recursive: true, force: true}).catch(() => {});
     // Cleanup workspace
     await fs.rm(workDir, { recursive: true, force: true }).catch(() => {});
   }
@@ -169,16 +171,24 @@ async function executeBuildAsync(buildId: string, params: BuildParams): Promise<
  * build server at GRADLE_WRAPPER_JAR_PATH (default: /opt/gradle-wrapper.jar).
  * Set that env var to the path of a cached wrapper jar on your CI/CD image.
  */
-async function generateAndroidProject(
+export async function generateAndroidProject(
   workDir: string,
   projectData: Record<string, unknown>
 ): Promise<void> {
   const config = projectData.config as Record<string, unknown>;
   const appName    = sanitizeString(config?.appName   as string, 'MyApp');
-  const packageName = sanitizeString(config?.packageName as string, 'com.example.myapp');
+  const packageName = config?.packageName as string;
+  if (typeof packageName !== 'string' || !/^[a-z][a-z0-9_]*(\.[a-z][a-z0-9_]*){2,}$/.test(packageName)) {
+    throw new Error('Invalid Android package name');
+  }
   const primaryColor = sanitizeColor(config?.primaryColor as string, '#6C63FF');
   const accentColor  = sanitizeColor(config?.accentColor  as string, '#00D4AA');
   const versionName  = sanitizeString(config?.versionName as string, '1.0.0');
+  const minSdk = Number(config?.minSdkVersion ?? 26);
+  const targetSdk = Number(config?.targetSdkVersion ?? 34);
+  if (!Number.isInteger(minSdk) || !Number.isInteger(targetSdk) || minSdk < 21 || targetSdk > 34 || minSdk > targetSdk) {
+    throw new Error('Template image supports Android SDK up to 34; configure another tested toolchain for newer targets');
+  }
   const versionCode  = Number.isInteger(config?.versionCode) ? (config.versionCode as number) : 1;
 
   // ── Directory tree ────────────────────────────────────────────────────────
@@ -255,11 +265,11 @@ plugins {
 }
 android {
     namespace = "${packageName}"
-    compileSdk = 34
+    compileSdk = ${targetSdk}
     defaultConfig {
         applicationId = "${packageName}"
-        minSdk = 26
-        targetSdk = 34
+        minSdk = ${minSdk}
+        targetSdk = ${targetSdk}
         versionCode = ${versionCode}
         versionName = "${versionName}"
     }
@@ -307,10 +317,16 @@ dependencies {
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.ScrollView
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val content = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(24,24,24,24) }
+${renderSections(projectData)}
+        setContentView(ScrollView(this).apply { addView(content) })
     }
 }
 `);
@@ -343,7 +359,7 @@ function sanitizeColor(value: string | undefined, fallback: string): string {
 
 /** Escapes special characters for Kotlin string literals. */
 function escapeKotlinString(s: string): string {
-  return s.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+  return s.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\$/g, '\\$').replace(/\r/g, '\\r').replace(/\n/g, '\\n');
 }
 
 /** Escapes special characters for XML text content. */
@@ -415,4 +431,14 @@ export async function listBuilds(userId: string): Promise<BuildRecord[]> {
     .get();
 
   return snapshot.docs.map(doc => doc.data() as BuildRecord);
+}
+
+/** Basic text rendering; interactive sections still require dedicated renderers. */
+function renderSections(project: Record<string, unknown>): string {
+  const sections = Array.isArray(project.sections) ? project.sections : [];
+  return sections.filter(s => s && s.isVisible !== false).slice(0, 100).flatMap(s =>
+    [s.title, s.subtitle, s.content].filter(v => typeof v === 'string' && v.length > 0).map(v =>
+      `        content.addView(TextView(this).apply { text = "${escapeKotlinString(v.slice(0, 4000))}"; textSize = 18f })`
+    )
+  ).join('\n');
 }

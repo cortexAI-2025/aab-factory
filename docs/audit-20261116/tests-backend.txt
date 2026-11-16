@@ -1,0 +1,22 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> aab-factory-backend@1.0.0 test
+> npm run build && node --test test/*.test.cjs
+
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> aab-factory-backend@1.0.0 build
+> tsc
+
+✔ user keystore never silently falls back to the system key (1.237071ms)
+✔ system signing requires explicit authorization (0.257964ms)
+✔ non-AAB, unsigned and symlink artifacts cannot pass delivery (12.48062ms)
+✔ generated source preserves visible sections, escapes Kotlin and respects SDK configuration (8.324523ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 139.466168
